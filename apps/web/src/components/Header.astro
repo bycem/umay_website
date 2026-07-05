@@ -40,20 +40,24 @@ const navLinks = [
       <span class="hamburger-line"></span>
     </button>
   </div>
-
-  <div id="mobile-menu" class="mobile-menu">
-    <ul class="mobile-nav-links">
-      {navLinks.map((link) => (
-        <li><a href={link.href}>{link.label}</a></li>
-      ))}
-      <li>
-        <a class="btn-outline" href={TOURNAMENT_URL} target="_blank" rel="noopener noreferrer">
-          Turnuva Uygulaması
-        </a>
-      </li>
-    </ul>
-  </div>
 </header>
+
+<!-- Mobil menü, header'ın DIŞINDA: header'daki backdrop-filter, içindeki
+     position:fixed öğeler için containing block oluşturuyor ve menüyü 72px'lik
+     header'a hapsedip yüksekliğini 0'a düşürüyordu. Viewport'a göre konumlanması
+     için header'dan çıkarıldı. -->
+<div id="mobile-menu" class="mobile-menu">
+  <ul class="mobile-nav-links">
+    {navLinks.map((link) => (
+      <li><a href={link.href}>{link.label}</a></li>
+    ))}
+    <li>
+      <a class="btn-outline" href={TOURNAMENT_URL} target="_blank" rel="noopener noreferrer">
+        Turnuva Uygulaması
+      </a>
+    </li>
+  </ul>
+</div>
 
 <style>
   .site-header {
