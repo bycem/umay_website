@@ -175,18 +175,20 @@ const navLinks = [
     }
 
     .mobile-menu {
+      display: block;
       position: fixed;
       inset: 72px 0 0 0;
       background: var(--bg);
       transform: translateX(100%);
-      transition: transform 0.3s ease;
+      visibility: hidden;
+      transition: transform 0.3s ease, visibility 0.3s ease;
       z-index: 99;
       overflow-y: auto;
     }
 
     .mobile-menu.open {
-      display: block;
       transform: translateX(0);
+      visibility: visible;
     }
 
     .mobile-nav-links {
