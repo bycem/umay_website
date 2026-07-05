@@ -356,3 +356,79 @@ button {
   outline: none;
   border-color: var(--accent);
 }
+
+/* ---------- RichTextEditor ---------- */
+
+.rte-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  background: var(--bg);
+}
+
+.rte-btn {
+  min-width: 32px;
+  height: 32px;
+  padding: 0 8px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--ink);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.rte-btn:hover {
+  background: var(--accent-tint);
+}
+
+.rte-btn--active {
+  background: var(--accent-tint);
+  border-color: var(--accent);
+  color: var(--accent-dark);
+}
+
+.rte-image-input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-top: none;
+  background: var(--bg);
+  position: relative;
+  flex-wrap: wrap;
+}
+
+.rte-image-error {
+  flex-basis: 100%;
+  color: var(--accent-dark);
+  font-size: 13px;
+}
+
+.rte-content {
+  border: 1px solid var(--line);
+  border-radius: 0 0 8px 8px;
+  background: var(--surface);
+}
+
+.rte-content .ProseMirror {
+  min-height: 300px;
+  padding: 12px 14px;
+  outline: none;
+  font-size: 14px;
+  color: var(--ink);
+}
+
+.rte-content:focus-within {
+  border-color: var(--accent);
+}
+
+.rte-content .ProseMirror img {
+  max-width: 100%;
+  border-radius: 4px;
+}
