@@ -20,8 +20,13 @@ export default function App() {
   }, []);
 
   async function handleLogout() {
-    await api.post('/api/auth/logout');
-    setPhase('login');
+    try {
+      await api.post('/api/auth/logout');
+    } catch (err) {
+      console.error('Çıkış isteği başarısız oldu, oturum yine de sonlandırılıyor:', err);
+    } finally {
+      setPhase('login');
+    }
   }
 
   if (phase === 'checking') return null;
