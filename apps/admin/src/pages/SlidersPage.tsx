@@ -13,6 +13,8 @@ interface Slider {
   image_url: string;
   is_active: boolean;
   sort_order: number;
+  publish_date: string;
+  end_date: string | null;
 }
 
 interface SliderFormState {
@@ -21,15 +23,27 @@ interface SliderFormState {
   image_url: string;
   sort_order: string;
   is_active: boolean;
+  publish_date: string;
+  end_date: string;
 }
 
-const EMPTY_FORM: SliderFormState = {
-  title: '',
-  description: '',
-  image_url: '',
-  sort_order: '0',
-  is_active: true,
-};
+function toLocalDateTimeInput(date: Date): string {
+  const tzOffsetMs = date.getTimezoneOffset() * 60 * 1000;
+  const local = new Date(date.getTime() - tzOffsetMs);
+  return local.toISOString().slice(0, 16);
+}
+
+function emptyForm(): SliderFormState {
+  return {
+    title: '',
+    description: '',
+    image_url: '',
+    sort_order: '0',
+    is_active: true,
+    publish_date: toLocalDateTimeInput(new Date()),
+    end_date: '',
+  };
+}
 
 function sliderToForm(slider: Slider): SliderFormState {
   return {
@@ -38,8 +52,16 @@ function sliderToForm(slider: Slider): SliderFormState {
     image_url: slider.image_url,
     sort_order: String(slider.sort_order),
     is_active: slider.is_active,
+    publish_date: toLocalDateTimeInput(new Date(slider.publish_date)),
+    end_date: slider.end_date ? toLocalDateTimeInput(new Date(slider.end_date)) : '',
   };
 }
+
+const dateFormatter = new Intl.DateTimeFormat('tr-TR', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+});
 
 export default function SlidersPage() {
   const { show } = useToast();
@@ -48,9 +70,10 @@ export default function SlidersPage() {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
-  const [form, setForm] = useState<SliderFormState>(EMPTY_FORM);
+  const [form, setForm] = useState<SliderFormState>(emptyForm());
   const [formError, setFormError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [togglingId, setTogglingId] = useState<number | null>(null);
 
   const [deleteTarget, setDeleteTarget] = useState<Slider | null>(null);
 
@@ -72,7 +95,7 @@ export default function SlidersPage() {
 
   function openCreateModal() {
     setEditingId(null);
-    setForm(EMPTY_FORM);
+    setForm(emptyForm());
     setFormError(null);
     setModalOpen(true);
   }
@@ -108,6 +131,8 @@ export default function SlidersPage() {
       image_url: form.image_url.trim(),
       sort_order: Number.parseInt(form.sort_order, 10) || 0,
       is_active: form.is_active,
+      publish_date: form.publish_date ? new Date(form.publish_date).toISOString() : new Date().toISOString(),
+      end_date: form.end_date ? new Date(form.end_date).toISOString() : null,
     };
 
     setSaving(true);
@@ -141,6 +166,27 @@ export default function SlidersPage() {
       await loadSliders();
     } catch (err) {
       show(err instanceof Error ? err.message : 'Bir hata oluştu', 'error');
+    }
+  }
+
+  async function toggleActive(slider: Slider) {
+    setTogglingId(slider.id);
+    try {
+      await api.put(`/api/sliders/${slider.id}`, {
+        title: slider.title,
+        description: slider.description,
+        image_url: slider.image_url,
+        sort_order: slider.sort_order,
+        is_active: !slider.is_active,
+        publish_date: slider.publish_date,
+        end_date: slider.end_date,
+      });
+      show(slider.is_active ? 'Pasife alındı' : 'Aktif edildi');
+      await loadSliders();
+    } catch (err) {
+      show(err instanceof Error ? err.message : 'Bir hata oluştu', 'error');
+    } finally {
+      setTogglingId(null);
     }
   }
 
@@ -190,6 +236,7 @@ export default function SlidersPage() {
             <tr>
               <th>Görsel</th>
               <th>Başlık</th>
+              <th>Yayın Tarihi</th>
               <th>Durum</th>
               <th>Sıra</th>
               <th>İşlemler</th>
@@ -203,9 +250,24 @@ export default function SlidersPage() {
                 </td>
                 <td>{slider.title}</td>
                 <td>
-                  <span className={slider.is_active ? 'badge badge-active' : 'badge badge-inactive'}>
+                  {dateFormatter.format(new Date(slider.publish_date))}
+                  {slider.end_date && (
+                    <span style={{ display: 'block', fontSize: 12, color: 'var(--ink-soft)' }}>
+                      bitiş: {dateFormatter.format(new Date(slider.end_date))}
+                    </span>
+                  )}
+                </td>
+                <td>
+                  <button
+                    type="button"
+                    className={slider.is_active ? 'badge badge-active' : 'badge badge-inactive'}
+                    style={{ border: 'none', cursor: 'pointer' }}
+                    disabled={togglingId === slider.id}
+                    onClick={() => toggleActive(slider)}
+                    title={slider.is_active ? 'Pasife al' : 'Aktif et'}
+                  >
                     {slider.is_active ? 'Aktif' : 'Pasif'}
-                  </span>
+                  </button>
                 </td>
                 <td>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -326,6 +388,41 @@ export default function SlidersPage() {
               value={form.sort_order}
               onChange={(e) => setForm({ ...form, sort_order: e.target.value })}
             />
+          </div>
+
+          <div style={{ marginBottom: 16 }}>
+            <label
+              htmlFor="slider-publish-date"
+              style={{ display: 'block', marginBottom: 6, fontSize: 14, fontWeight: 600, color: 'var(--ink)' }}
+            >
+              Yayın Tarihi
+            </label>
+            <input
+              id="slider-publish-date"
+              type="datetime-local"
+              className="form-field"
+              value={form.publish_date}
+              onChange={(e) => setForm({ ...form, publish_date: e.target.value })}
+            />
+          </div>
+
+          <div style={{ marginBottom: 16 }}>
+            <label
+              htmlFor="slider-end-date"
+              style={{ display: 'block', marginBottom: 6, fontSize: 14, fontWeight: 600, color: 'var(--ink)' }}
+            >
+              Bitiş Tarihi (opsiyonel)
+            </label>
+            <input
+              id="slider-end-date"
+              type="datetime-local"
+              className="form-field"
+              value={form.end_date}
+              onChange={(e) => setForm({ ...form, end_date: e.target.value })}
+            />
+            <p style={{ margin: '6px 0 0', fontSize: 12, color: 'var(--ink-soft)' }}>
+              Boş bırakılırsa slider süresiz yayında kalır.
+            </p>
           </div>
 
           <div style={{ marginBottom: 16 }}>

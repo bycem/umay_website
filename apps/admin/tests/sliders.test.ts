@@ -34,6 +34,26 @@ describe('sliders handlers', () => {
     const res = await createSlider(post('http://x/api/sliders', validBody), sql);
     expect(res.status).toBe(201);
   });
+  it('createSlider yayın ve bitiş tarihini yazar', async () => {
+    const { sql, calls } = fakeSql([{ id: 6 }]);
+    const body = { ...validBody, publish_date: '2026-08-01T09:00:00.000Z', end_date: '2026-08-10T09:00:00.000Z' };
+    const res = await createSlider(post('http://x/api/sliders', body), sql);
+    expect(res.status).toBe(201);
+    expect(calls[0].text).toContain('publish_date');
+    expect(calls[0].values).toContain('2026-08-01T09:00:00.000Z');
+    expect(calls[0].values).toContain('2026-08-10T09:00:00.000Z');
+  });
+  it('createSlider bitiş tarihi boşken null kaydeder', async () => {
+    const { sql, calls } = fakeSql([{ id: 7 }]);
+    const res = await createSlider(post('http://x/api/sliders', { ...validBody, end_date: '' }), sql);
+    expect(res.status).toBe(201);
+    expect(calls[0].values).toContain(null);
+  });
+  it('createSlider bitiş yayından önceyse 400', async () => {
+    const body = { ...validBody, publish_date: '2026-08-10T09:00:00.000Z', end_date: '2026-08-01T09:00:00.000Z' };
+    const res = await createSlider(post('http://x/api/sliders', body), fakeSql().sql);
+    expect(res.status).toBe(400);
+  });
   it('updateSlider sayısal olmayan id 400', async () => {
     const res = await updateSlider(post('http://x/api/sliders/abc', validBody, 'PUT'), fakeSql().sql, 'abc');
     expect(res.status).toBe(400);

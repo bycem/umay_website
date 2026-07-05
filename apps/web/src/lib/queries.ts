@@ -6,7 +6,8 @@ export type Announcement = { id: number; title: string; content: string; summary
 export async function getActiveSliders(sql: Sql): Promise<Slider[]> {
   return (await sql`
     SELECT id, title, description, image_url FROM sliders
-    WHERE is_active ORDER BY sort_order, id`) as Slider[];
+    WHERE is_active AND publish_date <= NOW() AND (end_date IS NULL OR end_date >= NOW())
+    ORDER BY sort_order, id`) as Slider[];
 }
 
 export async function getRecentAnnouncements(sql: Sql, limit: number): Promise<Announcement[]> {
