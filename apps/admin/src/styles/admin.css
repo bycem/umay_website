@@ -1,5 +1,4 @@
-/* Admin panel layout & component styles.
-   Minimal for now — extended in later tasks (Task 14 AppLayout, etc.). */
+/* Admin panel layout & component styles. */
 
 *,
 *::before,
@@ -13,4 +12,347 @@ body {
 
 button {
   font-family: inherit;
+}
+
+/* ---------- AppLayout ---------- */
+
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.app-sidebar {
+  width: 200px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: var(--surface);
+  border-right: 1px solid var(--line);
+  padding: 24px 16px;
+}
+
+.app-sidebar-top {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.app-sidebar-logo {
+  display: block;
+  width: 48px;
+  height: 48px;
+  margin: 0 auto;
+}
+
+.app-sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.app-sidebar-link {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.app-sidebar-link:hover {
+  background: var(--accent-tint);
+  color: var(--ink);
+}
+
+.app-sidebar-link--active {
+  background: var(--accent);
+  color: #fff;
+}
+
+.app-sidebar-link--active:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+.app-sidebar-logout {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.app-sidebar-logout:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.app-content {
+  flex: 1;
+  min-width: 0;
+  padding: 32px;
+}
+
+@media (max-width: 768px) {
+  .app-layout {
+    flex-direction: column;
+  }
+
+  .app-sidebar {
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-right: none;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .app-sidebar-top {
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .app-sidebar-logo {
+    width: 32px;
+    height: 32px;
+    margin: 0;
+  }
+
+  .app-sidebar-nav {
+    flex-direction: row;
+    gap: 8px;
+  }
+
+  .app-content {
+    padding: 16px;
+  }
+}
+
+/* ---------- Toast ---------- */
+
+.toast-container {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.toast {
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+  box-shadow: var(--shadow-md);
+  max-width: 320px;
+}
+
+.toast--success {
+  background: #2ecc71;
+}
+
+.toast--error {
+  background: var(--accent);
+}
+
+/* ---------- Modal ---------- */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(22, 24, 29, 0.4);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+}
+
+.modal-card {
+  width: 100%;
+  max-width: 560px;
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  background: var(--surface);
+  border-radius: 16px;
+  box-shadow: var(--shadow-lg);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--line);
+}
+
+.modal-title {
+  margin: 0;
+  font-size: 18px;
+}
+
+.modal-close {
+  border: none;
+  background: transparent;
+  font-size: 24px;
+  line-height: 1;
+  color: var(--ink-soft);
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+.modal-close:hover {
+  color: var(--accent);
+}
+
+.modal-body {
+  padding: 24px;
+}
+
+/* ---------- ConfirmDialog ---------- */
+
+.confirm-dialog-message {
+  margin: 0 0 24px;
+  color: var(--ink);
+  font-size: 15px;
+}
+
+.confirm-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+/* ---------- Buttons ---------- */
+
+.btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.btn-secondary {
+  background: transparent;
+  border-color: var(--line);
+  color: var(--ink);
+}
+
+.btn-secondary:hover {
+  border-color: var(--muted);
+}
+
+.btn-accent {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.btn-accent:hover {
+  background: var(--accent-dark);
+  border-color: var(--accent-dark);
+}
+
+/* ---------- Table ---------- */
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--surface);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.admin-table th {
+  text-align: left;
+  padding: 12px 16px;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--ink-soft);
+  border-bottom: 1px solid var(--line);
+}
+
+.admin-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+  font-size: 14px;
+}
+
+.admin-table tbody tr:hover {
+  background: rgba(224, 69, 47, 0.03);
+}
+
+.admin-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ---------- Status badge ---------- */
+
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge-active {
+  background: rgba(46, 204, 113, 0.15);
+  color: #219150;
+}
+
+.badge-inactive {
+  background: var(--accent-tint);
+  color: var(--accent-dark);
+}
+
+/* ---------- Image preview ---------- */
+
+.image-preview {
+  width: 80px;
+  height: 45px;
+  object-fit: cover;
+  border-radius: 4px;
+  display: block;
+}
+
+/* ---------- Form ---------- */
+
+.form-field {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--surface);
+}
+
+.form-field:focus {
+  outline: none;
+  border-color: var(--accent);
 }

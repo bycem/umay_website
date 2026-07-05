@@ -1,11 +1,15 @@
 import { useEffect, useState } from 'react';
 import { api, setUnauthorizedHandler } from './lib/api';
 import Login from './pages/Login';
+import AppLayout from './components/AppLayout';
+import type { NavKey } from './components/AppLayout';
+import { ToastProvider } from './components/Toast';
 
 type Phase = 'checking' | 'login' | 'panel';
 
 export default function App() {
   const [phase, setPhase] = useState<Phase>('checking');
+  const [active, setActive] = useState<NavKey>('sliders');
 
   useEffect(() => {
     setUnauthorizedHandler(() => setPhase('login'));
@@ -15,7 +19,23 @@ export default function App() {
       .catch(() => setPhase('login'));
   }, []);
 
+  async function handleLogout() {
+    await api.post('/api/auth/logout');
+    setPhase('login');
+  }
+
   if (phase === 'checking') return null;
   if (phase === 'login') return <Login onLogin={() => setPhase('panel')} />;
-  return <div>panel placeholder</div>; // Task 14'te AppLayout gelecek
+
+  return (
+    <ToastProvider>
+      <AppLayout active={active} onNavigate={setActive} onLogout={handleLogout}>
+        {active === 'sliders' ? (
+          <div>Slider Yönetimi</div>
+        ) : (
+          <div>Duyuru Yönetimi</div>
+        )}
+      </AppLayout>
+    </ToastProvider>
+  );
 }
