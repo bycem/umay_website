@@ -1,0 +1,16 @@
+/* Admin panel layout & component styles.
+   Minimal for now — extended in later tasks (Task 14 AppLayout, etc.). */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+button {
+  font-family: inherit;
+}
