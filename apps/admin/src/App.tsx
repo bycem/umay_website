@@ -4,6 +4,7 @@ import Login from './pages/Login';
 import AppLayout from './components/AppLayout';
 import type { NavKey } from './components/AppLayout';
 import { ToastProvider } from './components/Toast';
+import SlidersPage from './pages/SlidersPage';
 
 type Phase = 'checking' | 'login' | 'panel';
 
@@ -35,11 +36,7 @@ export default function App() {
   return (
     <ToastProvider>
       <AppLayout active={active} onNavigate={setActive} onLogout={handleLogout}>
-        {active === 'sliders' ? (
-          <div>Slider Yönetimi</div>
-        ) : (
-          <div>Duyuru Yönetimi</div>
-        )}
+        {active === 'sliders' ? <SlidersPage /> : <div>Duyuru Yönetimi</div>}
       </AppLayout>
     </ToastProvider>
   );
