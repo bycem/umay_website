@@ -1,0 +1,68 @@
+---
+import type { Announcement } from '../lib/queries';
+import { formatDateTr } from '../lib/format';
+
+interface Props {
+  announcement: Announcement;
+}
+
+const { announcement } = Astro.props;
+---
+
+<a href={`/duyuru/${announcement.id}`} class="announcement-card">
+  <span class="date-chip">{formatDateTr(announcement.publish_date)}</span>
+  <h3>{announcement.title}</h3>
+  {announcement.summary && <p class="summary">{announcement.summary}</p>}
+  <span class="read-more">Devamını oku →</span>
+</a>
+
+<style>
+  .announcement-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 24px;
+    border-radius: 16px;
+    background: var(--surface);
+    box-shadow: var(--shadow-sm);
+    text-decoration: none;
+    color: inherit;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+  }
+
+  .announcement-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-3px);
+  }
+
+  .date-chip {
+    display: inline-block;
+    background: var(--accent-tint);
+    color: var(--accent-dark);
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 999px;
+  }
+
+  .announcement-card h3 {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 1.15rem;
+    line-height: 1.3;
+  }
+
+  .summary {
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  .read-more {
+    margin-top: auto;
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+</style>

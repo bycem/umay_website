@@ -1,0 +1,277 @@
+---
+import type { Slider } from '../lib/queries';
+
+interface Props {
+  sliders: Slider[];
+}
+
+const { sliders } = Astro.props;
+---
+
+<section class="hero-slider" id="hero-slider">
+  {sliders.length === 0 ? (
+    <div class="hero-empty">
+      <p>Henüz slider eklenmemiş</p>
+    </div>
+  ) : (
+    <>
+      <div class="hero-track" id="hero-track" style={`width: ${sliders.length * 100}%`}>
+        {sliders.map((slider) => (
+          <div class="hero-slide" style={`width: ${100 / sliders.length}%`}>
+            <img src={slider.image_url} alt={slider.title} loading="eager" />
+            <div class="hero-overlay">
+              <h2>{slider.title}</h2>
+              {slider.description && <p>{slider.description}</p>}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {sliders.length > 1 && (
+        <>
+          <button class="hero-arrow hero-arrow-prev" id="hero-prev" type="button" aria-label="Önceki slayt">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+          </button>
+          <button class="hero-arrow hero-arrow-next" id="hero-next" type="button" aria-label="Sonraki slayt">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+
+          <div class="hero-indicators" id="hero-indicators">
+            {sliders.map((_, i) => (
+              <button class="hero-indicator" type="button" data-index={i} aria-label={`Slayt ${i + 1}`}>
+                <span class="hero-indicator-fill"></span>
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+    </>
+  )}
+</section>
+
+<style>
+  .hero-slider {
+    position: relative;
+    width: 100%;
+    height: 70vh;
+    min-height: 480px;
+    overflow: hidden;
+    background: var(--ink);
+  }
+
+  .hero-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    color: var(--muted);
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+  }
+
+  .hero-track {
+    display: flex;
+    height: 100%;
+    transition: transform 0.5s ease;
+  }
+
+  .hero-slide {
+    position: relative;
+    height: 100%;
+    flex-shrink: 0;
+  }
+
+  .hero-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+    padding: 48px;
+    background: linear-gradient(180deg, transparent 30%, rgba(22, 24, 29, 0.75));
+  }
+
+  .hero-overlay h2 {
+    color: #fff;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    max-width: 800px;
+  }
+
+  .hero-overlay p {
+    color: rgba(255, 255, 255, 0.9);
+    margin-top: 12px;
+    max-width: 600px;
+    font-size: 1.05rem;
+  }
+
+  .hero-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(22, 24, 29, 0.5);
+    color: #fff;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    z-index: 2;
+  }
+
+  .hero-arrow:hover {
+    background: rgba(22, 24, 29, 0.75);
+  }
+
+  .hero-arrow-prev {
+    left: 24px;
+  }
+
+  .hero-arrow-next {
+    right: 24px;
+  }
+
+  .hero-indicators {
+    position: absolute;
+    bottom: 24px;
+    right: 48px;
+    display: flex;
+    gap: 8px;
+    z-index: 2;
+  }
+
+  .hero-indicator {
+    width: 48px;
+    height: 3px;
+    padding: 0;
+    border: none;
+    background: rgba(255, 255, 255, 0.35);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-indicator-fill {
+    position: absolute;
+    inset: 0;
+    width: 0%;
+    background: #fff;
+  }
+
+  .hero-indicator.active .hero-indicator-fill {
+    animation: hero-fill 5000ms linear forwards;
+  }
+
+  @keyframes hero-fill {
+    from {
+      width: 0%;
+    }
+    to {
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .hero-slider {
+      height: 60vh;
+    }
+
+    .hero-overlay {
+      padding: 24px;
+    }
+
+    .hero-indicators {
+      right: 24px;
+    }
+  }
+</style>
+
+<script>
+  const section = document.getElementById('hero-slider');
+  const track = document.getElementById('hero-track');
+
+  if (section && track) {
+    const slides = track.querySelectorAll('.hero-slide');
+    const indicators = document.querySelectorAll('.hero-indicator');
+    const prevBtn = document.getElementById('hero-prev');
+    const nextBtn = document.getElementById('hero-next');
+    const total = slides.length;
+
+    let index = 0;
+    let timer: ReturnType<typeof setInterval> | null = null;
+
+    function restartIndicatorAnimation() {
+      indicators.forEach((el, i) => {
+        el.classList.toggle('active', i === index);
+        if (i === index) {
+          const fill = el.querySelector('.hero-indicator-fill') as HTMLElement | null;
+          if (fill) {
+            fill.style.animation = 'none';
+            void fill.offsetWidth;
+            fill.style.animation = '';
+          }
+        }
+      });
+    }
+
+    function goTo(newIndex: number) {
+      index = ((newIndex % total) + total) % total;
+      track.style.transform = `translateX(-${index * 100}%)`;
+      restartIndicatorAnimation();
+    }
+
+    function next() {
+      goTo(index + 1);
+    }
+
+    function prev() {
+      goTo(index - 1);
+    }
+
+    function startAutoplay() {
+      if (total > 1 && !timer) {
+        timer = setInterval(next, 5000);
+      }
+    }
+
+    function stopAutoplay() {
+      if (timer) {
+        clearInterval(timer);
+        timer = null;
+      }
+    }
+
+    if (prevBtn) prevBtn.addEventListener('click', () => { prev(); stopAutoplay(); startAutoplay(); });
+    if (nextBtn) nextBtn.addEventListener('click', () => { next(); stopAutoplay(); startAutoplay(); });
+
+    indicators.forEach((el) => {
+      el.addEventListener('click', () => {
+        const target = Number(el.getAttribute('data-index'));
+        goTo(target);
+        stopAutoplay();
+        startAutoplay();
+      });
+    });
+
+    section.addEventListener('mouseenter', stopAutoplay);
+    section.addEventListener('mouseleave', startAutoplay);
+
+    restartIndicatorAnimation();
+    startAutoplay();
+  }
+</script>

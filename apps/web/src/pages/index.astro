@@ -1,10 +1,47 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import HeroSlider from '../components/HeroSlider.astro';
+import AnnouncementCard from '../components/AnnouncementCard.astro';
+import { sql } from '../lib/db';
+import { getActiveSliders, getRecentAnnouncements } from '../lib/queries';
+
+const [sliders, announcements] = await Promise.all([
+  getActiveSliders(sql),
+  getRecentAnnouncements(sql, 6),
+]);
 ---
 
-<Layout title="Umay Okçuluk" description="Umay Okçuluk Kulübü resmi web sitesi.">
-  <section class="container">
-    <p class="overline">Umay Okçuluk</p>
-    <h1>Yakında burada olacak.</h1>
+<Layout title="Umay Okçuluk" description="Umay Okçuluk Kulübü — Lüleburgaz">
+  <HeroSlider sliders={sliders} />
+  <section class="container fade-up">
+    <p class="overline">DUYURULAR</p>
+    <h2>Son Duyurular</h2>
+    {announcements.length === 0 ? (
+      <p class="empty">Henüz duyuru bulunmuyor.</p>
+    ) : (
+      <div class="cards">
+        {announcements.map((a) => <AnnouncementCard announcement={a} />)}
+      </div>
+    )}
   </section>
 </Layout>
+
+<style>
+  .empty {
+    color: var(--muted);
+    margin-top: 24px;
+  }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+    margin-top: 32px;
+  }
+
+  @media (max-width: 768px) {
+    .cards {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
