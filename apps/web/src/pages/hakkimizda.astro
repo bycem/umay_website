@@ -11,59 +11,210 @@ import Layout from '../layouts/Layout.astro';
       <p class="overline">HAKKIMIZDA</p>
       <h1>Umay Okçuluk Kulübü</h1>
 
-      <!-- İÇERİK: eski siteden taşınacak -->
-      <p>
+      <p class="lead">
         Umay Okçuluk, Lüleburgaz'da geleneksel Türk okçuluğunu yaşatmak ve
         gelecek nesillere aktarmak amacıyla bir araya gelmiş bir topluluktur.
         Kulübümüz, atalarımızdan miras kalan yay çekme sanatını hem sportif
-        hem de kültürel bir değer olarak ele alır; her seviyeden okçuya
-        kapılarını açar. Yeni başlayanlardan deneyimli sporculara kadar
-        herkes için düzenli antrenmanlar, seminerler ve atış günleri
-        düzenleriz.
+        hem de kültürel bir değer olarak ele alır.
       </p>
-      <p>
-        Geleneksel Türk okçuluğu bizim için yalnızca bir spor dalı değil,
-        aynı zamanda sabır, disiplin ve iç huzur arayışının bir yansımasıdır.
-        Menzil ve puta atışlarında ustalaşmak yıllar süren emek ister; bu
-        yolculukta her okçu kendi nefesiyle, kendi yayıyla ve kendi
-        sabrıyla baş başa kalır. Kulübümüzde bu değerleri koruyarak
-        antrenmanlarımızı sürdürüyor, tarihi teknikleri günümüz
-        koşullarında yeniden üretiyoruz.
-      </p>
-      <p>
-        Umay Okçuluk olarak amacımız yalnızca iyi okçular değil, aynı zamanda
-        birbirine değer veren, dayanışma içinde bir topluluk yetiştirmektir.
-        Kapımız; okçuluğu merak eden, öğrenmek isteyen ve bu köklü geleneğin
-        bir parçası olmak isteyen herkese açıktır.
-      </p>
+
+      <div class="block">
+        <h2>Neler Yapıyoruz?</h2>
+        <p>Yeni başlayanlardan deneyimli sporculara kadar herkes için:</p>
+        <ul class="check-list">
+          <li>Her seviyeden okçuya açık kapı</li>
+          <li>Düzenli antrenmanlar</li>
+          <li>Seminerler</li>
+          <li>Atış günleri</li>
+        </ul>
+      </div>
+
+      <div class="block">
+        <h2>Değerlerimiz</h2>
+        <p>
+          Geleneksel Türk okçuluğu bizim için yalnızca bir spor dalı değil,
+          aynı zamanda sabır, disiplin ve iç huzur arayışının bir yansımasıdır.
+        </p>
+        <div class="cards">
+          <div class="card">
+            <span class="label">Sabır</span>
+            <p>
+              Menzil ve puta atışlarında ustalaşmak yıllar süren emek ister.
+            </p>
+          </div>
+          <div class="card">
+            <span class="label">Disiplin</span>
+            <p>
+              Tarihi teknikleri koruyarak antrenmanlarımızı düzenli biçimde
+              sürdürüyor, günümüz koşullarında yeniden üretiyoruz.
+            </p>
+          </div>
+          <div class="card">
+            <span class="label">İç Huzur</span>
+            <p>
+              Bu yolculukta her okçu kendi nefesiyle, kendi yayıyla ve kendi
+              sabrıyla baş başa kalır.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout">
+        <p>
+          Umay Okçuluk olarak amacımız yalnızca iyi okçular değil, aynı zamanda
+          birbirine değer veren, dayanışma içinde bir topluluk yetiştirmektir.
+          Kapımız; okçuluğu merak eden, öğrenmek isteyen ve bu köklü geleneğin
+          bir parçası olmak isteyen herkese açıktır.
+        </p>
+      </div>
     </div>
   </section>
 </Layout>
 
 <style>
   .content {
-    max-width: 720px;
+    max-width: 760px;
     margin-inline: auto;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 40px;
   }
 
   .content h1 {
     margin-top: 12px;
-    margin-bottom: 8px;
     font-size: 2.25rem;
   }
 
-  .content p {
+  .lead {
+    color: var(--ink);
+    font-size: 1.2rem;
+    line-height: 1.65;
+    margin-top: -24px;
+  }
+
+  .block {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .block h2 {
+    font-size: 1.4rem;
+    position: relative;
+    padding-bottom: 12px;
+  }
+
+  .block h2::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 48px;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--accent);
+  }
+
+  .block > p {
     color: var(--ink-soft);
     font-size: 1.05rem;
     line-height: 1.7;
   }
 
+  .check-list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 12px;
+  }
+
+  .check-list li {
+    position: relative;
+    padding-left: 34px;
+    color: var(--ink-soft);
+    font-size: 1.05rem;
+    line-height: 1.6;
+  }
+
+  .check-list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--accent-tint);
+    color: var(--accent-dark);
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 24px;
+    border-radius: 16px;
+    background: var(--surface);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--line);
+  }
+
+  .label {
+    color: var(--accent);
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+  }
+
+  .card p {
+    color: var(--ink-soft);
+    font-size: 0.98rem;
+    line-height: 1.6;
+  }
+
+  .callout {
+    padding: 28px 32px;
+    border-radius: 16px;
+    background: var(--accent-tint);
+    border-left: 4px solid var(--accent);
+  }
+
+  .callout p {
+    color: var(--ink);
+    font-size: 1.08rem;
+    line-height: 1.7;
+  }
+
   @media (max-width: 768px) {
+    .content {
+      gap: 32px;
+    }
+
     .content h1 {
       font-size: 1.75rem;
+    }
+
+    .lead {
+      font-size: 1.1rem;
+    }
+
+    .cards {
+      grid-template-columns: 1fr;
+    }
+
+    .callout {
+      padding: 24px;
     }
   }
 </style>
