@@ -1,8 +1,12 @@
 [build]
-  command = "npm run build"
-  publish = "dist"
+  command = "npm run build --workspace apps/admin"
+  publish = "apps/admin/dist"
+
+[build.environment]
+  NODE_VERSION = "22"
 
 [functions]
+  directory = "apps/admin/netlify/functions"
   node_bundler = "esbuild"
 
 [[redirects]]
