@@ -1,0 +1,105 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { sql } from '../../lib/db';
+import { getAnnouncementById } from '../../lib/queries';
+import { formatDateTr } from '../../lib/format';
+
+const idParam = Astro.params.id ?? '';
+if (!/^\d+$/.test(idParam)) return Astro.rewrite('/404');
+const announcement = await getAnnouncementById(sql, Number(idParam));
+if (!announcement) return Astro.rewrite('/404');
+---
+
+<Layout title={`${announcement.title} — Umay Okçuluk`} description={announcement.summary ?? undefined}>
+  <article class="container detail fade-up">
+    <a href="/" class="back">← Anasayfa</a>
+    <span class="date-chip">{formatDateTr(announcement.publish_date)}</span>
+    <h1>{announcement.title}</h1>
+    {/* announcement.content is sanitized server-side at write time (admin uses sanitize-html before storing), so rendering it here with set:html is the intended, safe path. */}
+    <div class="content" set:html={announcement.content} />
+  </article>
+</Layout>
+
+<style>
+  .detail {
+    max-width: 720px;
+    padding-block: 48px 96px;
+  }
+
+  .back {
+    display: inline-block;
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 24px;
+  }
+
+  .back:hover {
+    color: var(--accent);
+  }
+
+  .date-chip {
+    display: inline-block;
+    background: var(--accent-tint);
+    color: var(--accent-dark);
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 999px;
+    margin-bottom: 16px;
+  }
+
+  h1 {
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    margin-bottom: 32px;
+  }
+
+  .content {
+    color: var(--ink);
+  }
+
+  .content :global(p) {
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+
+  .content :global(h2),
+  .content :global(h3),
+  .content :global(h4) {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    margin-top: 32px;
+    margin-bottom: 16px;
+  }
+
+  .content :global(img) {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    margin-block: 24px;
+  }
+
+  .content :global(blockquote) {
+    border-left: 4px solid var(--accent);
+    padding-left: 20px;
+    margin-block: 24px;
+    color: var(--ink-soft);
+    font-style: italic;
+  }
+
+  .content :global(a) {
+    color: var(--accent);
+    text-decoration: underline;
+  }
+
+  .content :global(ul),
+  .content :global(ol) {
+    margin-bottom: 20px;
+    padding-inline-start: 24px;
+  }
+
+  .content :global(li) {
+    line-height: 1.7;
+  }
+</style>
