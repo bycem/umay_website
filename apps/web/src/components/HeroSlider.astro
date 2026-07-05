@@ -231,7 +231,7 @@ const { sliders } = Astro.props;
 
     function goTo(newIndex: number) {
       index = ((newIndex % total) + total) % total;
-      track.style.transform = `translateX(-${index * 100}%)`;
+      track.style.transform = `translateX(-${index * (100 / total)}%)`;
       restartIndicatorAnimation();
     }
 

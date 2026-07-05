@@ -66,6 +66,7 @@ export default function AnnouncementsPage() {
   const [form, setForm] = useState<AnnouncementFormState>(emptyForm());
   const [formError, setFormError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [togglingId, setTogglingId] = useState<number | null>(null);
 
   const [deleteTarget, setDeleteTarget] = useState<Announcement | null>(null);
 
@@ -142,6 +143,24 @@ export default function AnnouncementsPage() {
     }
   }
 
+  async function toggleActive(announcement: Announcement) {
+    setTogglingId(announcement.id);
+    try {
+      await api.put(`/api/announcements/${announcement.id}`, {
+        title: announcement.title,
+        content: announcement.content,
+        publish_date: announcement.publish_date,
+        is_active: !announcement.is_active,
+      });
+      show(announcement.is_active ? 'Pasife alındı' : 'Aktif edildi');
+      await loadAnnouncements();
+    } catch (err) {
+      show(err instanceof Error ? err.message : 'Bir hata oluştu', 'error');
+    } finally {
+      setTogglingId(null);
+    }
+  }
+
   function requestDelete(announcement: Announcement) {
     setDeleteTarget(announcement);
   }
@@ -207,9 +226,16 @@ export default function AnnouncementsPage() {
                   <td>{announcement.title}</td>
                   <td>{dateFormatter.format(new Date(announcement.publish_date))}</td>
                   <td>
-                    <span className={announcement.is_active ? 'badge badge-active' : 'badge badge-inactive'}>
+                    <button
+                      type="button"
+                      className={announcement.is_active ? 'badge badge-active' : 'badge badge-inactive'}
+                      style={{ border: 'none', cursor: 'pointer' }}
+                      disabled={togglingId === announcement.id}
+                      onClick={() => toggleActive(announcement)}
+                      title={announcement.is_active ? 'Pasife al' : 'Aktif et'}
+                    >
                       {announcement.is_active ? 'Aktif' : 'Pasif'}
-                    </span>
+                    </button>
                   </td>
                   <td>
                     <div style={{ display: 'flex', gap: 8 }}>
