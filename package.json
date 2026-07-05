@@ -1,0 +1,6 @@
+{
+  "name": "umay-genel",
+  "private": true,
+  "workspaces": ["apps/*"],
+  "engines": { "node": ">=22" }
+}
