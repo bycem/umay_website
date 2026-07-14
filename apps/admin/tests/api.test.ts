@@ -12,7 +12,7 @@ describe('api guard', () => {
     expect(res.status).toBe(401);
   });
   it('geçerli oturumla geçer', async () => {
-    const token = await createSessionToken();
+    const token = await createSessionToken('bycem');
     const res = await buildApi(fakeSql)(new Request('http://x/api/auth/me', { headers: { cookie: `umay_session=${token}` } }));
     expect(res.status).toBe(200);
   });
@@ -21,7 +21,7 @@ describe('api guard', () => {
     expect(res.status).not.toBe(401);
   });
   it('cross-origin mutasyon 403', async () => {
-    const token = await createSessionToken();
+    const token = await createSessionToken('bycem');
     const res = await buildApi(fakeSql)(new Request('http://x/api/sliders', {
       method: 'POST', body: '{}',
       headers: { cookie: `umay_session=${token}`, origin: 'https://evil.com', host: 'x' },

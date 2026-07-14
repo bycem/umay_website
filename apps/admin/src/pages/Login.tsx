@@ -7,6 +7,7 @@ interface LoginProps {
 }
 
 export default function Login({ onLogin }: LoginProps) {
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -16,7 +17,7 @@ export default function Login({ onLogin }: LoginProps) {
     setError(null);
     setSubmitting(true);
     try {
-      await api.post('/api/auth/login', { password });
+      await api.post('/api/auth/login', { username, password });
       onLogin();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Bir hata oluştu');
@@ -66,11 +67,31 @@ export default function Login({ onLogin }: LoginProps) {
         </h1>
         <form onSubmit={handleSubmit}>
           <input
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Kullanıcı adı"
+            autoComplete="username"
+            autoFocus
+            required
+            style={{
+              width: '100%',
+              padding: '12px 16px',
+              marginBottom: 16,
+              border: '1px solid var(--line)',
+              borderRadius: 8,
+              fontSize: 16,
+              fontFamily: 'var(--font-body)',
+              color: 'var(--ink)',
+              background: 'var(--surface)',
+            }}
+          />
+          <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Şifre"
-            autoFocus
+            autoComplete="current-password"
             required
             style={{
               width: '100%',

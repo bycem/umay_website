@@ -3,9 +3,10 @@ import { SignJWT, jwtVerify } from 'jose';
 const secret = () => new TextEncoder().encode(process.env.SESSION_SECRET!);
 const COOKIE = 'umay_session';
 
-export async function createSessionToken(): Promise<string> {
+export async function createSessionToken(username: string): Promise<string> {
   return new SignJWT({ role: 'admin' })
     .setProtectedHeader({ alg: 'HS256' })
+    .setSubject(username)
     .setIssuedAt()
     .setExpirationTime('24h')
     .sign(secret());

@@ -76,27 +76,20 @@ Bu monorepo **iki ayrı Netlify sitesi** olarak deploy edilir; ikisi de aynı re
 | Değişken | Hangi app | Açıklama |
 |---|---|---|
 | `NETLIFY_DATABASE_URL` | `apps/web`, `apps/admin` | Neon Postgres bağlantı adresi. Netlify DB eklendiğinde otomatik enjekte edilir; yerelde migration/test için elle tanımlanabilir. |
-| `ADMIN_PASSWORD_HASH` | `apps/admin` | Panel girişi için tek paylaşımlı şifrenin bcrypt hash'i. Kod tabanında düz metin şifre tutulmaz. |
 | `SESSION_SECRET` | `apps/admin` | JWT oturum çerezini imzalamak için kullanılan rastgele anahtar. |
 
 Örnek dosyalar: `apps/admin/.env.example`, `apps/web/.env.example`.
 
-## Şifre hash'i üretme (admin)
+## Admin kullanıcıları
 
-Admin girişi tek bir paylaşımlı şifre kullanır; şifre düz metin olarak değil, bcrypt hash'i (`ADMIN_PASSWORD_HASH`) olarak saklanır. `apps/admin` dizininde (bcryptjs bağımlılığı orada kurulu olduğu için) şu komutla hash üretin:
+Panel girişi kullanıcı adı + şifre ile yapılır. Kullanıcılar `admin_users` tablosunda tutulur; şifre düz metin olarak değil, bcrypt hash'i olarak saklanır. Kullanıcı eklemek veya var olan bir kullanıcının şifresini güncellemek için (`apps/admin` dizininde, `NETLIFY_DATABASE_URL` tanımlıyken):
 
 ```bash
 cd apps/admin
-node -e "import('bcryptjs').then(b=>b.hash(process.argv[1],12).then(console.log))" 'sifreniz'
+npm run db:create-admin <kullanici-adi> '<sifre>'
 ```
 
-Bu komut doğrulanmıştır ve şuna benzer bir çıktı üretir:
-
-```
-$2b$12$Z5BS0hdLabOQHxZttJbRBOJbX85Ujx5N8oBN0Qhuu22W7/D7Z4xGm
-```
-
-Çıktıyı olduğu gibi `ADMIN_PASSWORD_HASH` ortam değişkenine yapıştırın (Netlify dashboard veya yerel `.env`).
+Komut kullanıcıyı ekler; kullanıcı zaten varsa şifresini günceller (upsert).
 
 ## `SESSION_SECRET` üretme
 

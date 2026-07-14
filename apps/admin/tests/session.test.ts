@@ -5,7 +5,7 @@ beforeAll(() => { process.env.SESSION_SECRET = 'test-secret-en-az-32-karakter-uz
 
 describe('session', () => {
   it('üretilen token doğrulanır', async () => {
-    expect(await verifySessionToken(await createSessionToken())).toBe(true);
+    expect(await verifySessionToken(await createSessionToken('bycem'))).toBe(true);
   });
   it('bozuk token reddedilir', async () => {
     expect(await verifySessionToken('sahte.token.x')).toBe(false);
