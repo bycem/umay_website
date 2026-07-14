@@ -22,9 +22,11 @@ const navLinks = [
           <li><a href={link.href}>{link.label}</a></li>
         ))}
       </ul>
+      {/* Turnuva uygulaması linki şimdilik kapalı.
       <a class="btn-outline" href={TOURNAMENT_URL} target="_blank" rel="noopener noreferrer">
         Turnuva Uygulaması
       </a>
+      */}
     </nav>
 
     <button
@@ -51,11 +53,13 @@ const navLinks = [
     {navLinks.map((link) => (
       <li><a href={link.href}>{link.label}</a></li>
     ))}
+    {/* Turnuva uygulaması linki şimdilik kapalı.
     <li>
       <a class="btn-outline" href={TOURNAMENT_URL} target="_blank" rel="noopener noreferrer">
         Turnuva Uygulaması
       </a>
     </li>
+    */}
   </ul>
 </div>
 
