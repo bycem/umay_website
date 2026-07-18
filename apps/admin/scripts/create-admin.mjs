@@ -1,4 +1,4 @@
-import { neon } from '@neondatabase/serverless';
+import postgres from 'postgres';
 import bcrypt from 'bcryptjs';
 
 // Kullanım: NETLIFY_DATABASE_URL=... node scripts/create-admin.mjs <username> <password>
@@ -12,7 +12,7 @@ if (!username || !password) {
   process.exit(1);
 }
 
-const sql = neon(url);
+const sql = postgres(url, { prepare: false });
 const hash = await bcrypt.hash(password, 10);
 await sql`
   INSERT INTO admin_users (username, password_hash)
@@ -20,3 +20,4 @@ await sql`
   ON CONFLICT (username)
   DO UPDATE SET password_hash = EXCLUDED.password_hash, updated_at = NOW()`;
 console.log(`admin kullanıcısı hazır: ${username}`);
+await sql.end();
