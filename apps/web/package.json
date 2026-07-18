@@ -10,8 +10,8 @@
   },
   "dependencies": {
     "@astrojs/netlify": "^6.6.4",
-    "@neondatabase/serverless": "^1.1.0",
-    "astro": "^5.16.10"
+    "astro": "^5.16.10",
+    "postgres": "^3.4.9"
   },
   "devDependencies": {
     "typescript": "^5.9.3",

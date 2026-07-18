@@ -1,46 +1,49 @@
-# Graph Report - .  (2026-07-14)
+# Graph Report - .  (2026-07-18)
 
 ## Corpus Check
-- 116 files · ~56,308 words
+- 8 files · ~56,588 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 361 nodes · 531 edges · 23 communities (20 shown, 3 thin omitted)
-- Extraction: 91% EXTRACTED · 9% INFERRED · 0% AMBIGUOUS · INFERRED: 47 edges (avg confidence: 0.86)
-- Token cost: 338,767 input · 0 output
+- 401 nodes · 573 edges · 26 communities (22 shown, 4 thin omitted)
+- Extraction: 92% EXTRACTED · 8% INFERRED · 0% AMBIGUOUS · INFERRED: 43 edges (avg confidence: 0.87)
+- Token cost: 20,000 input · 10,000 output
 
 ## Community Hubs (Navigation)
-- [[_COMMUNITY_Admin API Handlers|Admin API Handlers]]
-- [[_COMMUNITY_Admin SPA Components|Admin SPA Components]]
-- [[_COMMUNITY_API Handlers & Routing (TDD)|API Handlers & Routing (TDD)]]
-- [[_COMMUNITY_Web Utils & Task Reports|Web Utils & Task Reports]]
-- [[_COMMUNITY_Admin Dependencies|Admin Dependencies]]
-- [[_COMMUNITY_Astro Web Frontend|Astro Web Frontend]]
-- [[_COMMUNITY_Admin SPA Auth & Task Docs|Admin SPA Auth & Task Docs]]
-- [[_COMMUNITY_Web App Config & Deps|Web App Config & Deps]]
-- [[_COMMUNITY_Admin TS Config|Admin TS Config]]
-- [[_COMMUNITY_Session Module & Tests|Session Module & Tests]]
-- [[_COMMUNITY_Monorepo Scaffold & SDD Ledger|Monorepo Scaffold & SDD Ledger]]
-- [[_COMMUNITY_Root Workspace Config|Root Workspace Config]]
-- [[_COMMUNITY_Admin Logo  Brand|Admin Logo / Brand]]
-- [[_COMMUNITY_DB Migration Runner|DB Migration Runner]]
-- [[_COMMUNITY_Web Logo  Brand Identity|Web Logo / Brand Identity]]
-- [[_COMMUNITY_Web TS Config|Web TS Config]]
-- [[_COMMUNITY_Admin User Seeder|Admin User Seeder]]
-- [[_COMMUNITY_Web DB Client|Web DB Client]]
-- [[_COMMUNITY_Visual Identity & Tokens|Visual Identity & Tokens]]
+- [[_COMMUNITY_Admin API & Auth|Admin API & Auth]]
+- [[_COMMUNITY_Admin React App & Layout|Admin React App & Layout]]
+- [[_COMMUNITY_Netlify CRUD Handlers|Netlify CRUD Handlers]]
+- [[_COMMUNITY_Task Reports & Summaries|Task Reports & Summaries]]
+- [[_COMMUNITY_Architecture & Security|Architecture & Security]]
+- [[_COMMUNITY_Admin package.json|Admin package.json]]
+- [[_COMMUNITY_Web Astro Components|Web Astro Components]]
+- [[_COMMUNITY_Web App Scaffold|Web App Scaffold]]
+- [[_COMMUNITY_Announcements Handler|Announcements Handler]]
+- [[_COMMUNITY_Web package.json|Web package.json]]
+- [[_COMMUNITY_Admin tsconfig|Admin tsconfig]]
+- [[_COMMUNITY_SDD Ledger & Reviews|SDD Ledger & Reviews]]
+- [[_COMMUNITY_Root package.json|Root package.json]]
+- [[_COMMUNITY_Umay Brand Identity|Umay Brand Identity]]
+- [[_COMMUNITY_Migrate Script|Migrate Script]]
+- [[_COMMUNITY_Umay Archery Concept|Umay Archery Concept]]
+- [[_COMMUNITY_Web tsconfig|Web tsconfig]]
+- [[_COMMUNITY_Create Admin Script|Create Admin Script]]
+- [[_COMMUNITY_HTML Sanitization|HTML Sanitization]]
+- [[_COMMUNITY_Web db.ts|Web db.ts]]
+- [[_COMMUNITY_Design Tokens|Design Tokens]]
+- [[_COMMUNITY_Rate Limiting|Rate Limiting]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `json()` - 18 edges
-2. `Sql` - 15 edges
-3. `Umay Web Rewrite Implementation Plan` - 11 edges
-4. `login()` - 10 edges
-5. `compilerOptions` - 10 edges
-6. `../layouts/Layout.astro` - 10 edges
-7. `announcements.ts Handler Module` - 8 edges
-8. `SlidersPage Component` - 8 edges
-9. `updateAnnouncement()` - 7 edges
-10. `updateSlider()` - 7 edges
+2. `apps/admin` - 18 edges
+3. `Sql` - 15 edges
+4. `Umay Web Rewrite Implementation Plan` - 11 edges
+5. `login()` - 10 edges
+6. `compilerOptions` - 10 edges
+7. `../layouts/Layout.astro` - 10 edges
+8. `apps/web` - 10 edges
+9. `announcements.ts Handler Module` - 8 edges
+10. `SlidersPage Component` - 8 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `Task 20: About & Contact Pages (brief)` --conceptually_related_to--> `Umay Web Rewrite Implementation Plan`  [INFERRED]
@@ -49,106 +52,107 @@
   .superpowers/sdd/task-21-brief.md → docs/superpowers/plans/2026-07-04-umay-web-rewrite.md
 - `Task 22: README & Deployment Docs (brief)` --conceptually_related_to--> `Umay Web Rewrite Implementation Plan`  [INFERRED]
   .superpowers/sdd/task-22-brief.md → docs/superpowers/plans/2026-07-04-umay-web-rewrite.md
-- `AnnouncementsPage Component` --semantically_similar_to--> `SlidersPage Component`  [INFERRED] [semantically similar]
-  .superpowers/sdd/task-16-brief.md → .superpowers/sdd/task-15-brief.md
-- `Task 22 Report: README & Deployment Docs` --implements--> `Umay Okçuluk Monorepo README`  [EXTRACTED]
-  .superpowers/sdd/task-22-report.md → README.md
+- `Layout.astro` --semantically_similar_to--> `Design Tokens (tokens.css)`  [INFERRED] [semantically similar]
+  .superpowers/sdd/task-17-brief.md → .superpowers/sdd/task-13-brief.md
+- `Admin SPA HTML Entry (index.html)` --conceptually_related_to--> `Two-App Isolation Architecture`  [INFERRED]
+  apps/admin/index.html → docs/superpowers/specs/2026-07-04-umay-web-rewrite-design.md
 
 ## Import Cycles
 - None detected.
 
-## Hyperedges (group relationships)
-- **Admin API Request Pipeline (guards + router + handlers)** — _superpowers_sdd_task_12_brief_build_api, _superpowers_sdd_task_12_brief_csrf_origin_guard, _superpowers_sdd_task_12_brief_session_guard, _superpowers_sdd_task_12_brief_router, _superpowers_sdd_task_10_brief_sliders_handler, _superpowers_sdd_task_11_brief_announcements_handler [EXTRACTED 0.75]
-- **Admin SPA Shell Components** — _superpowers_sdd_task_14_brief_app_layout, _superpowers_sdd_task_14_brief_toast, _superpowers_sdd_task_14_brief_modal, _superpowers_sdd_task_14_brief_confirm_dialog [EXTRACTED 0.75]
-- **Web Homepage Data + Render Flow** — _superpowers_sdd_task_19_brief_index_astro, _superpowers_sdd_task_19_brief_hero_slider, _superpowers_sdd_task_19_brief_announcement_card, _superpowers_sdd_task_18_brief_queries, _superpowers_sdd_task_17_brief_layout_astro [EXTRACTED 0.75]
-- **Admin Login/Auth Request Pipeline** — _superpowers_sdd_task_9_brief_auth_handlers, _superpowers_sdd_task_6_brief_session, _superpowers_sdd_task_7_brief_ratelimit, _superpowers_sdd_task_8_brief_router [EXTRACTED 0.85]
-- **Admin Security Posture** — _superpowers_sdd_task_5_brief_sanitizecontent, _superpowers_sdd_task_4_brief_isvalidimageurl, _superpowers_sdd_task_6_brief_session, _superpowers_sdd_task_7_brief_ratelimit [INFERRED 0.75]
+## Communities (26 total, 4 thin omitted)
 
-## Communities (23 total, 3 thin omitted)
+### Community 0 - "Admin API & Auth"
+Cohesion: 0.10
+Nodes (33): buildApi(), config, DUMMY_HASH, login(), logout(), me(), createSlider(), deleteSlider() (+25 more)
 
-### Community 0 - "Admin API Handlers"
-Cohesion: 0.08
-Nodes (36): buildApi(), config, AnnBody, createAnnouncement(), deleteAnnouncement(), listAnnouncements(), parseId(), updateAnnouncement() (+28 more)
-
-### Community 1 - "Admin SPA Components"
+### Community 1 - "Admin React App & Layout"
 Cohesion: 0.06
 Nodes (33): App(), Phase, AppLayoutProps, NAV_ITEMS, NavKey, ConfirmDialogProps, ModalProps, RichTextEditorProps (+25 more)
 
-### Community 2 - "API Handlers & Routing (TDD)"
+### Community 2 - "Netlify CRUD Handlers"
 Cohesion: 0.05
-Nodes (45): fakeSql Test Helper, isValidImageUrl, json Response Helper (router), Task 10: Slider CRUD Handlers (TDD), sliders.ts Handler Module, Sql Type (rateLimit), Task 10 Report, Task 11: Announcement CRUD Handlers (TDD) (+37 more)
+Nodes (47): fakeSql Test Helper, isValidImageUrl, json Response Helper (router), Task 10: Slider CRUD Handlers (TDD), sliders.ts Handler Module, Sql Type (rateLimit), Task 10 Report, Task 11: Announcement CRUD Handlers (TDD) (+39 more)
 
-### Community 3 - "Web Utils & Task Reports"
+### Community 3 - "Task Reports & Summaries"
 Cohesion: 0.07
-Nodes (38): Task 20: About & Contact Pages (brief), Task 20 Report: About & Contact Pages, Task 21: Announcement Detail & Error Pages (brief), Task 21 Report: Announcement Detail & Error Pages, Task 22: README & Deployment Docs (brief), Task 22 Report: README & Deployment Docs, Task 3: makeSummary (brief), makeSummary (summary.ts) (+30 more)
+Nodes (37): Task 20: About & Contact Pages (brief), Task 20 Report: About & Contact Pages, Task 21: Announcement Detail & Error Pages (brief), Task 21 Report: Announcement Detail & Error Pages, Task 22: README & Deployment Docs (brief), Task 22 Report: README & Deployment Docs, Task 3: makeSummary (brief), makeSummary (summary.ts) (+29 more)
 
-### Community 4 - "Admin Dependencies"
+### Community 4 - "Architecture & Security"
+Cohesion: 0.07
+Nodes (36): admin_users table, AppLayout.tsx, apps/admin, apps/web, Astro, bcrypt, Content-Security-Policy, db:create-admin script (+28 more)
+
+### Community 5 - "Admin package.json"
 Cohesion: 0.06
-Nodes (31): dependencies, bcryptjs, jose, @neondatabase/serverless, react, react-dom, sanitize-html, @tiptap/extension-image (+23 more)
+Nodes (31): dependencies, bcryptjs, jose, postgres, react, react-dom, sanitize-html, @tiptap/extension-image (+23 more)
 
-### Community 5 - "Astro Web Frontend"
+### Community 6 - "Web Astro Components"
 Cohesion: 0.11
-Nodes (18): ../components/AnnouncementCard.astro, ../components/Footer.astro, ../components/Header.astro, navLinks, ../components/HeroSlider.astro, ../layouts/Layout.astro, sql, formatDateTr() (+10 more)
+Nodes (17): ../components/AnnouncementCard.astro, ../components/Footer.astro, navLinks, ../components/HeroSlider.astro, ../layouts/Layout.astro, sql, formatDateTr(), Announcement (+9 more)
 
-### Community 6 - "Admin SPA Auth & Task Docs"
-Cohesion: 0.10
-Nodes (25): Session Guard (verifySessionToken), Task 13: Admin SPA Tokens + API Client + Auth + Login, SPA API Client (api.ts), App Phase State Machine (checking-login-panel), Design Tokens (tokens.css), Login.tsx Page, Cookie-only session (no localStorage), Task 13 Report (+17 more)
+### Community 7 - "Web App Scaffold"
+Cohesion: 0.09
+Nodes (23): Astro Netlify Adapter (output: server), Footer.astro, Header.astro, Layout.astro, Web App (umay-web, Astro SSR), Task 17: Web App Scaffold (Astro + Layout + Header + Footer), Task 17 Report, queries.ts (getActiveSliders, getRecentAnnouncements, getAnnouncementById) (+15 more)
 
-### Community 7 - "Web App Config & Deps"
+### Community 8 - "Announcements Handler"
+Cohesion: 0.20
+Nodes (10): AnnBody, createAnnouncement(), deleteAnnouncement(), listAnnouncements(), parseId(), updateAnnouncement(), validateAnn(), sanitizeContent() (+2 more)
+
+### Community 9 - "Web package.json"
 Cohesion: 0.12
-Nodes (15): dependencies, astro, @astrojs/netlify, @neondatabase/serverless, devDependencies, typescript, vitest, name (+7 more)
+Nodes (15): dependencies, astro, @astrojs/netlify, postgres, devDependencies, typescript, vitest, name (+7 more)
 
-### Community 8 - "Admin TS Config"
+### Community 10 - "Admin tsconfig"
 Cohesion: 0.17
 Nodes (11): compilerOptions, jsx, lib, module, moduleResolution, noEmit, skipLibCheck, strict (+3 more)
 
-### Community 9 - "Session Module & Tests"
-Cohesion: 0.38
-Nodes (7): clearSessionCookie(), createSessionToken(), getSessionToken(), secret(), sessionCookie(), verifySessionToken(), fakeSql
-
-### Community 10 - "Monorepo Scaffold & SDD Ledger"
+### Community 11 - "SDD Ledger & Reviews"
 Cohesion: 0.25
 Nodes (9): Final Whole-Branch Review, Logo Placeholder Asset Gap, SDD Progress Ledger (umay-web-rewrite), Umay Web Rewrite Feature, Admin App (umay-admin, Vite + React), Task 1: Monorepo Scaffold + Admin App, npm Workspaces Monorepo, Task 1 Report (+1 more)
 
-### Community 11 - "Root Workspace Config"
+### Community 12 - "Root package.json"
 Cohesion: 0.33
 Nodes (5): engines, node, name, private, workspaces
 
-### Community 12 - "Admin Logo / Brand"
+### Community 13 - "Umay Brand Identity"
 Cohesion: 0.67
 Nodes (4): Umay Archery Sports Club Brand Identity, Stylized Bird of Prey Emblem, Traditional Turkish Bow Icon, Umay Okculuk Spor Kulubu Crest Logo
 
-### Community 13 - "DB Migration Runner"
+### Community 14 - "Migrate Script"
 Cohesion: 0.50
 Nodes (3): applied, dir, sql
 
-### Community 14 - "Web Logo / Brand Identity"
+### Community 15 - "Umay Archery Concept"
 Cohesion: 0.67
 Nodes (4): Traditional Turkish Archery, Umay Deity Bird / Bow Emblem, Umay Okçuluk Spor Kulübü Logo, Umay Okçuluk Spor Kulübü (Archery Sports Club)
 
-### Community 15 - "Web TS Config"
+### Community 16 - "Web tsconfig"
 Cohesion: 0.50
 Nodes (3): exclude, extends, include
 
+### Community 18 - "HTML Sanitization"
+Cohesion: 0.67
+Nodes (3): sanitize-html, netlify/lib/sanitize.ts, TipTap editor
+
 ## Knowledge Gaps
-- **131 isolated node(s):** `config`, `AnnBody`, `DUMMY_HASH`, `SliderBody`, `sql` (+126 more)
+- **152 isolated node(s):** `config`, `AnnBody`, `DUMMY_HASH`, `SliderBody`, `Handler` (+147 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **3 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **4 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `sliders.ts Handler Module` connect `API Handlers & Routing (TDD)` to `Admin SPA Auth & Task Docs`?**
-  _High betweenness centrality (0.013) - this node is a cross-community bridge._
-- **Why does `SlidersPage Component` connect `Admin SPA Auth & Task Docs` to `API Handlers & Routing (TDD)`?**
-  _High betweenness centrality (0.013) - this node is a cross-community bridge._
+- **Why does `sliders.ts Handler Module` connect `Netlify CRUD Handlers` to `Web App Scaffold`?**
+  _High betweenness centrality (0.011) - this node is a cross-community bridge._
+- **Why does `DB Schema (sliders, announcements, login_attempts)` connect `Web App Scaffold` to `Netlify CRUD Handlers`?**
+  _High betweenness centrality (0.008) - this node is a cross-community bridge._
 - **Are the 10 inferred relationships involving `Umay Web Rewrite Implementation Plan` (e.g. with `Task 20: About & Contact Pages (brief)` and `Task 21: Announcement Detail & Error Pages (brief)`) actually correct?**
   _`Umay Web Rewrite Implementation Plan` has 10 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `config`, `AnnBody`, `DUMMY_HASH` to the rest of the system?**
-  _140 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `Admin API Handlers` be split into smaller, more focused modules?**
-  _Cohesion score 0.0847457627118644 - nodes in this community are weakly interconnected._
-- **Should `Admin SPA Components` be split into smaller, more focused modules?**
+  _163 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Should `Admin API & Auth` be split into smaller, more focused modules?**
+  _Cohesion score 0.09879336349924585 - nodes in this community are weakly interconnected._
+- **Should `Admin React App & Layout` be split into smaller, more focused modules?**
   _Cohesion score 0.06285714285714286 - nodes in this community are weakly interconnected._
-- **Should `API Handlers & Routing (TDD)` be split into smaller, more focused modules?**
-  _Cohesion score 0.052525252525252523 - nodes in this community are weakly interconnected._
+- **Should `Netlify CRUD Handlers` be split into smaller, more focused modules?**
+  _Cohesion score 0.0545790934320074 - nodes in this community are weakly interconnected._
