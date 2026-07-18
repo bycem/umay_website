@@ -1,6 +1,7 @@
 import { json } from '../lib/router';
 import { makeSummary } from '../lib/summary';
 import { sanitizeContent } from '../lib/sanitize';
+import { purgeSiteCache } from '../lib/purge';
 import type { Sql } from '../lib/rateLimit';
 
 function parseId(id: string): number | null {
@@ -35,6 +36,7 @@ export async function createAnnouncement(req: Request, sql: Sql): Promise<Respon
     INSERT INTO announcements (title, content, summary, publish_date, is_active)
     VALUES (${data!.title}, ${data!.content}, ${data!.summary}, ${data!.publish_date}, ${data!.is_active})
     RETURNING id, title, content, summary, publish_date, is_active`;
+  await purgeSiteCache();
   return json({ announcement: row }, 201);
 }
 
@@ -49,6 +51,7 @@ export async function updateAnnouncement(req: Request, sql: Sql, id: string): Pr
     WHERE id = ${numId}
     RETURNING id, title, content, summary, publish_date, is_active`;
   if (rows.length === 0) return json({ error: 'Kayıt bulunamadı' }, 404);
+  await purgeSiteCache();
   return json({ announcement: rows[0] });
 }
 
@@ -57,5 +60,6 @@ export async function deleteAnnouncement(sql: Sql, id: string): Promise<Response
   if (numId === null) return json({ error: 'Geçersiz id' }, 400);
   const rows = await sql`DELETE FROM announcements WHERE id = ${numId} RETURNING id`;
   if (rows.length === 0) return json({ error: 'Kayıt bulunamadı' }, 404);
+  await purgeSiteCache();
   return json({ ok: true });
 }
