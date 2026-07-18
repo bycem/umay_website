@@ -1,6 +1,6 @@
 # Umay Okçuluk — Monorepo
 
-Umay Okçuluk kulübü için genel web sitesi ve yönetim panelini içeren monorepo. İki bağımsız uygulama, tek bir Neon (Netlify DB) veritabanını paylaşır.
+Umay Okçuluk kulübü için genel web sitesi ve yönetim panelini içeren monorepo. İki bağımsız uygulama, ortak bir Postgres veritabanını (Supabase ya da başka herhangi bir Postgres) paylaşır. DB istemcisi olarak [`postgres`](https://github.com/porsager/postgres) (postgres.js) kullanılır.
 
 ## Proje yapısı
 
@@ -19,13 +19,23 @@ Kök dizinde bağımlılıkları kurun:
 npm install
 ```
 
+### Ortam değişkeni
+
+Her iki app da Postgres bağlantısı için `NETLIFY_DATABASE_URL` bekler. Yerelde Supabase kullanıyorsan pooler connection string'ini kullan:
+
+```bash
+export NETLIFY_DATABASE_URL='postgresql://postgres.<PROJECT-REF>:<PASSWORD>@aws-1-<REGION>.pooler.supabase.com:5432/postgres'
+```
+
+> ⚠️ `.env` dosyaları repo'da yok — değişkeni kendi shell'ine export et veya dev komutunun başına inline geç.
+
 ### apps/web (public site)
 
 ```bash
-npm run dev -w apps/web
+NETLIFY_DATABASE_URL='...' npm run dev -w apps/web
 ```
 
-Astro dev server'ı ayağa kaldırır. Veritabanı sorguları için `NETLIFY_DATABASE_URL` ortam değişkeninin tanımlı olması gerekir (bkz. aşağıdaki tablo).
+Astro dev server varsayılan olarak `http://localhost:4321` üzerinde ayağa kalkar.
 
 ### apps/admin (yönetim paneli)
 
@@ -34,13 +44,46 @@ Admin API'si Netlify Functions üzerinde çalıştığından iki süreç birlikt
 ```bash
 # 1. terminal: Netlify Functions'ı yerelde ayağa kaldırır (varsayılan port 8888)
 cd apps/admin
-netlify dev
+NETLIFY_DATABASE_URL='...' SESSION_SECRET='...' netlify dev
 
 # 2. terminal: Vite dev server (varsayılan port 5173)
 npm run dev -w apps/admin
 ```
 
 `apps/admin/vite.config.ts` içinde `/api` istekleri otomatik olarak `http://localhost:8888` adresine proxy'lenir, bu yüzden Vite dev server'ı ile `netlify dev`'in aynı anda çalışması gerekir.
+
+> Sadece UI üzerinde çalışıp API'ye gitmeyecekseniz `netlify dev`'i atlayıp yalnız Vite'ı başlatabilirsiniz; ancak login/slider/duyuru işlemleri 502 döner.
+
+### Debug ipuçları
+
+- **Bağlantıyı hızlıca doğrula** (herhangi bir tabloya dokunmadan):
+  ```bash
+  node -e "import('postgres').then(async ({default:pg})=>{const s=pg(process.env.NETLIFY_DATABASE_URL,{prepare:false}); console.log(await s\`select 1 as ok\`); await s.end();})"
+  ```
+- **Migration'ları uygula** (idempotent, çalışmışları atlar):
+  ```bash
+  NETLIFY_DATABASE_URL='...' npm run db:migrate -w apps/admin
+  ```
+- **Admin kullanıcısı oluştur / şifreyi güncelle** (upsert):
+  ```bash
+  cd apps/admin && NETLIFY_DATABASE_URL='...' npm run db:create-admin <kullanici> '<sifre>'
+  ```
+- **Supabase pooler notları**:
+  - Kullanıcı adı `postgres.<PROJECT-REF>` formatındadır (nokta önemlidir).
+  - Port `5432` = session mode (uzun ömürlü bağlantı), `6543` = transaction mode (serverless için). postgres.js her ikisinde de `prepare: false` ile çalışır.
+  - Bazı shell'ler `!` gibi karakterleri genişletir; connection string'i her zaman **tek tırnak** içinde tut.
+- **API'yi curl'le dene** (`netlify dev` port 8888):
+  ```bash
+  curl -i http://localhost:8888/api/sliders
+  curl -i -X POST http://localhost:8888/api/auth/login \
+    -H 'content-type: application/json' \
+    -d '{"username":"bycem","password":"..."}'
+  ```
+- **DB tarafı log**: postgres.js sorgu loglamak için `postgres(url, { debug: (conn, q, params) => console.log(q, params) })` opsiyonuyla başlat.
+- **Sık hatalar**:
+  - `password authentication failed for user "postgres"` → connection string'deki `postgres.<ref>` kısmındaki `.<ref>` düşürülmüş demektir (genelde tırnaksız geçmekten kaynaklanır).
+  - `NETLIFY_DATABASE_URL gerekli` → değişkeni ilgili komutun başına inline geçin veya `export` edin.
+  - `netlify: command not found` → `npm i -g netlify-cli` ile kurun.
 
 ### Testler
 
@@ -60,10 +103,10 @@ Bu monorepo **iki ayrı Netlify sitesi** olarak deploy edilir; ikisi de aynı re
    - Base directory: `apps/admin`
    - Build command / publish: `apps/admin/netlify.toml` içinde tanımlı (`npm run build`, publish `dist`, functions `netlify/functions`)
 
-### Veritabanı (Netlify DB / Neon)
+### Veritabanı (Postgres — Supabase / kendi Postgres'iniz)
 
-1. Admin sitesinde (veya hangi site önce kurulursa) **Netlify DB** eklentisini etkinleştirin. Bu, Neon üzerinde bir Postgres veritabanı oluşturur ve `NETLIFY_DATABASE_URL` ortam değişkenini otomatik olarak siteye enjekte eder.
-2. Aynı veritabanını **ikinci siteye de bağlayın**: Netlify dashboard'da ilgili DB'yi diğer siteye "shared/linked" env var olarak ekleyin (Site settings → Environment variables → Netlify DB bağlantısını paylaş), böylece her iki site de aynı `NETLIFY_DATABASE_URL` değerini kullanır.
+1. Bir Postgres örneği hazırlayın (Supabase, self-hosted, RDS, vb.). Supabase kullanıyorsanız connection pooling connection string'ini alın (bkz. Supabase → Project → Connect → "Connection pooling").
+2. Bu URL'i her iki Netlify sitesinde `NETLIFY_DATABASE_URL` ortam değişkeni olarak tanımlayın (Site settings → Environment variables). İki site de **aynı** URL'i kullanmalıdır.
 3. Migration'ları çalıştırın (bkz. aşağıdaki "Migration çalıştırma" bölümü).
 
 ### Domain önerisi
@@ -75,7 +118,7 @@ Bu monorepo **iki ayrı Netlify sitesi** olarak deploy edilir; ikisi de aynı re
 
 | Değişken | Hangi app | Açıklama |
 |---|---|---|
-| `NETLIFY_DATABASE_URL` | `apps/web`, `apps/admin` | Neon Postgres bağlantı adresi. Netlify DB eklendiğinde otomatik enjekte edilir; yerelde migration/test için elle tanımlanabilir. |
+| `NETLIFY_DATABASE_URL` | `apps/web`, `apps/admin` | Postgres bağlantı adresi (örn. Supabase pooler URL'i). Adı geriye dönük uyumluluk için `NETLIFY_` prefix'iyle kalmıştır; herhangi bir Postgres URL'i olabilir. |
 | `SESSION_SECRET` | `apps/admin` | JWT oturum çerezini imzalamak için kullanılan rastgele anahtar. |
 
 Örnek dosyalar: `apps/admin/.env.example`, `apps/web/.env.example`.

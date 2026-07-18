@@ -1,5 +1,6 @@
 import { json } from '../lib/router';
 import { isValidImageUrl } from '../lib/imageUrl';
+import { purgeSiteCache } from '../lib/purge';
 import type { Sql } from '../lib/rateLimit';
 
 function parseId(id: string): number | null {
@@ -39,6 +40,7 @@ export async function createSlider(req: Request, sql: Sql): Promise<Response> {
     INSERT INTO sliders (title, description, image_url, is_active, sort_order, publish_date, end_date)
     VALUES (${data!.title}, ${data!.description}, ${data!.image_url}, ${data!.is_active}, ${data!.sort_order}, ${data!.publish_date}, ${data!.end_date})
     RETURNING id, title, description, image_url, is_active, sort_order, publish_date, end_date`;
+  await purgeSiteCache();
   return json({ slider: row }, 201);
 }
 
@@ -53,6 +55,7 @@ export async function updateSlider(req: Request, sql: Sql, id: string): Promise<
     WHERE id = ${numId}
     RETURNING id, title, description, image_url, is_active, sort_order, publish_date, end_date`;
   if (rows.length === 0) return json({ error: 'Kayıt bulunamadı' }, 404);
+  await purgeSiteCache();
   return json({ slider: rows[0] });
 }
 
@@ -61,6 +64,7 @@ export async function deleteSlider(sql: Sql, id: string): Promise<Response> {
   if (numId === null) return json({ error: 'Geçersiz id' }, 400);
   const rows = await sql`DELETE FROM sliders WHERE id = ${numId} RETURNING id`;
   if (rows.length === 0) return json({ error: 'Kayıt bulunamadı' }, 404);
+  await purgeSiteCache();
   return json({ ok: true });
 }
 
@@ -71,5 +75,6 @@ export async function reorderSliders(req: Request, sql: Sql): Promise<Response> 
   for (let i = 0; i < ids.length; i++) {
     await sql`UPDATE sliders SET sort_order = ${i}, updated_at = NOW() WHERE id = ${ids[i]}`;
   }
+  await purgeSiteCache();
   return json({ ok: true });
 }

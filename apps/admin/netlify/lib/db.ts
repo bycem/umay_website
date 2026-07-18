@@ -1,3 +1,3 @@
-import { neon } from '@neondatabase/serverless';
+import postgres from 'postgres';
 
-export const sql = neon(process.env.NETLIFY_DATABASE_URL!);
+export const sql = postgres(process.env.NETLIFY_DATABASE_URL!, { prepare: false });
